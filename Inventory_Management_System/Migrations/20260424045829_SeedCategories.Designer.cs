@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inventory_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260422095207_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260424045829_SeedCategories")]
+    partial class SeedCategories
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,28 @@ namespace Inventory_Management_System.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Electronics"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Clothing"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Groceries"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Furniture"
+                        });
                 });
 
             modelBuilder.Entity("Inventory_Management_System.Models.Product", b =>
@@ -56,8 +78,8 @@ namespace Inventory_Management_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");

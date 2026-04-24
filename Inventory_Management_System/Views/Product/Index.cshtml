@@ -1,0 +1,47 @@
+﻿@model List<Inventory_Management_System.Models.Product>
+@{
+    ViewData["Title"] = "Products";
+}
+
+<h2>Product List</h2>
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["success"]
+    </div>
+}
+
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["error"]
+    </div>
+}
+
+<a href="/Product/Create" class="btn btn-success mb-3">Add Product</a>
+
+<table class="table table-bordered">
+    <tr>
+        <th> Name</th>
+        <th> Price</th>
+        <th> Quantity</th>
+        <th> Category</th>
+        <th> Actions</th>
+</tr>
+@foreach(var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Price.ToString("0.00")</td>
+            <td>@item.Quantity</td>
+            <td>@item.Category?.Name</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Edit</a>
+
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
+                    Delete
+                </a>
+            </td>
+</tr>
+    }
+</table>

@@ -1,8 +1,10 @@
-using Microsoft.EntityFrameworkCore;
 using Inventory_Management_System.Data;
+using Inventory_Management_System.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<ProductService>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -14,7 +16,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
-{
+    {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }

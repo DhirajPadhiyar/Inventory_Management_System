@@ -26,6 +26,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Product</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -33,6 +36,19 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (TempData["success"] != null)
+            {
+                <div class="alert alert-success text-center">
+                    @TempData["success"]
+                </div>
+            }
+
+            @if (TempData["error"] != null)
+            {
+                <div class="alert alert-danger text-center">
+                    @TempData["error"]
+                </div>
+            }
             @RenderBody()
         </main>
     </div>
@@ -46,5 +62,13 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        setTimeout(function () {
+        var alert = document.querySelector('.alert');
+        if (alert) {
+        alert.style.display = 'none';
+        }
+        }, 3000);
+    </script>
 </body>
 </html>
