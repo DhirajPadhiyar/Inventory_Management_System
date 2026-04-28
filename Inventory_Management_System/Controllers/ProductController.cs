@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Inventory_Management_System.Models;
 using Inventory_Management_System.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Inventory_Management_System.Controllers
 {
@@ -12,16 +10,19 @@ namespace Inventory_Management_System.Controllers
     {
         private readonly ProductService _productService;
         private readonly ApplicationDbContext _context;
+
         public ProductController(ProductService productService, ApplicationDbContext context)
         {
             _productService = productService;
             _context = context;
         }
+
         public IActionResult Index()
         {
             var products = _productService.GetAllProducts();
             return View(products);
         }
+
         public IActionResult Create()
         {
             var categories = _context.Categories.ToList();
@@ -32,29 +33,37 @@ namespace Inventory_Management_System.Controllers
         [HttpPost]
         public IActionResult Create(Product product)
         {
-            if(product.Price <= 0)
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("Price", "Price must be greater than zero.");
+                var categories = _context.Categories.ToList();
+                ViewBag.CategoryList = new SelectList(categories, "Id", "Name", product.CategoryId);
+                return View(product);
             }
-     
-            if (product.CategoryId == null)
+
+            try
             {
-                ModelState.AddModelError("CategoryId", "Please select a category");
+                _productService.AddProduct(product);
+                TempData["Success"] = $"Product '{product.Name}' added successfully!";
+                return RedirectToAction("Index");
             }
-            if (ModelState.IsValid)
+            catch (Exception ex)
             {
-                try
-                {
-                    _productService.AddProduct(product);
-                    TempData["Success"] = $"Product '{product.Name}' added successfully!";
-                    return RedirectToAction("Index");
-                }
-                catch (Exception ex)
-                {
-                    // 👇 SHOW ERROR IN UI INSTEAD OF CRASH
-                    ModelState.AddModelError("", ex.Message);
-                }
+                ModelState.AddModelError("", ex.Message);
             }
+
+            var cats = _context.Categories.ToList();
+            ViewBag.CategoryList = new SelectList(cats, "Id", "Name", product.CategoryId);
+
+            return View(product);
+        }
+
+        // GET Edit
+        public IActionResult Edit(int id)
+        {
+            var product = _productService.GetById(id);
+
+            if (product == null)
+                return NotFound();
 
             var categories = _context.Categories.ToList();
             ViewBag.CategoryList = new SelectList(categories, "Id", "Name", product.CategoryId);
@@ -62,94 +71,60 @@ namespace Inventory_Management_System.Controllers
             return View(product);
         }
 
-        //Update Action
-        public IActionResult Edit(int id)
-        {
-            var product = _context.Products.Find(id);
-
-            if(product==null)
-            {
-                return NotFound();
-            }
-            return View(product);
-        }
-
+        // POST Edit
         [HttpPost]
         public IActionResult Edit(Product model)
         {
-
             if (!ModelState.IsValid)
             {
+                var categories = _context.Categories.ToList();
+                ViewBag.CategoryList = new SelectList(categories, "Id", "Name", model.CategoryId);
                 return View(model);
             }
 
-            // Duplicate check (IMPORTANT)
-            if (_context.Products.Any(p => p.Name.ToLower() == model.Name.ToLower() && p.Id != model.Id))
-            {
-                ModelState.AddModelError("Name", "Product with this name already exists.");
-                return View(model);
-            }
             try
             {
-               
-                var product= _context.Products.Find(model.Id);
-               
-                if (product == null)
-                {
-                    return NotFound();
-                }
-
-                product.Name = model.Name;
-                product.Price = model.Price;
-                product.Quantity = model.Quantity;
-                _context.SaveChanges(); 
-
+                _productService.UpdateProduct(model);
                 TempData["Success"] = $"Product '{model.Name}' updated successfully!";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Something went wrong while updating the product.");
-                return View(model);
+                ModelState.AddModelError("", ex.Message);
             }
+
+            var cats = _context.Categories.ToList();
+            ViewBag.CategoryList = new SelectList(cats, "Id", "Name", model.CategoryId);
+
+            return View(model);
         }
 
-        //Delete Action
+        // GET Delete
         public IActionResult Delete(int id)
         {
-            var product = _context.Products.Find(id);
+            var product = _productService.GetById(id);
+
             if (product == null)
-            {
                 return NotFound();
-            }
+
             return View(product);
         }
 
+        // POST Delete
         [HttpPost, ActionName("Delete")]
         public IActionResult DeleteConfirmed(int id)
         {
             try
             {
-                var product = _context.Products.Find(id);
-                if (product == null)
-                {
-                    TempData["Error"] = "Product not found or already deleted.";
-                    return RedirectToAction("Index");
-                }
-
-                _context.Products.Remove(product);
-                _context.SaveChanges();
-
-                TempData["Success"] = $"Product '{product.Name}' deleted successfully!";
-
-                return RedirectToAction("Index");
-                
+                _productService.DeleteProduct(id);
+                TempData["Success"] = "Product deleted successfully!";
             }
             catch (Exception ex)
             {
-                TempData["error"] = $"Something went wrong while deleting the product.";
-                return RedirectToAction("Index");
+                TempData["Error"] = ex.Message;
             }
+
+            return RedirectToAction("Index");
         }
     }
 }

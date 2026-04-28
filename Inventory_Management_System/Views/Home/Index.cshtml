@@ -1,8 +1,111 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h2 class="mb-4">📊 Dashboard</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger text-center">
+        @ViewBag.Error
+    </div>
+}
+
+<div class="row">
+
+    <div class="col-md-4" >
+        <div class="card text-white bg-primary mb-3 shadow ">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-box"></i> Total Products
+                </h5>
+                <h2>@ViewBag.TotalProducts</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3 shadow">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-tags"></i> Total Categories
+                </h5>
+                <h2>@ViewBag.TotalCategories</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-danger mb-3 shadow">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-exclamation-triangle"></i> Low Stock
+                </h5>
+                <h2>@ViewBag.LowStock</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Low Stock Products -->
+<div class="card mt-4 shadow-sm border border-dark">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="text-danger mb-0">
+                🔴 Low Stock Products (Need Attention)
+            </h5>
+        </div>
+
+        <small class="text-muted">
+            <i class="bi bi-pencil"></i> Products with low quantity. Please restock soon.
+        </small>    <br /><br />
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th style="width:60%;">Product</th>
+                    <th style="width:10%; text-align:center;">Action</th>
+                    <th style="width:20%; text-align:center;">Quantity</th>
+                    <th style="width:20%; text-align:center;">Stock Level</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.LowStockProducts != null)
+                {
+                    foreach (var item in ViewBag.LowStockProducts)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+
+                            <td class="text-center @(item.Quantity <= 2 ? "text-danger fw-bold" : "text-warning fw-bold")">
+                                @item.Quantity
+                            </td>
+
+
+                            <td class="text-center">
+                                @if (item.Quantity <= 2)
+                                {
+                                    <span class="badge bg-danger">Critical</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Low</span>
+                                }
+                            </td>
+
+                            <td class="text-center">
+                                <a asp-controller="Product"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

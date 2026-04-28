@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<CategoryService>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

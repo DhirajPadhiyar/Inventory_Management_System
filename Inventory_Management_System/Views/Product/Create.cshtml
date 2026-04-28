@@ -22,13 +22,8 @@
 
     <div class="mb-3">
         <label>Category</label>
-        <select name="CategoryId" class="form-control">
-            <option value="">-- Select Category --</option>
-
-            @foreach (var item in (SelectList)ViewBag.CategoryList)
-            {
-                <option value="@item.Value">@item.Text</option>
-            }
+        <select asp-for="CategoryId" asp-items="ViewBag.CategoryList" class="form-control">
+            <option value="0">-- Select Category --</option>
         </select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </div>
