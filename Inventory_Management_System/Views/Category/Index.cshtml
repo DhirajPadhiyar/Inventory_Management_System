@@ -16,6 +16,7 @@
         {
             <tr>
                 <td>@item.Name</td>
+
                 <td class="text-center">
                     <div class="dropdown">
                         <button class="btn btn-sm btn-outline-primary" data-bs-toggle="dropdown" title="Actions">
@@ -28,16 +29,15 @@
                                     ✏️ Edit
                                 </a>
                             </li>
+
                             <li>
-                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this category?')">
-                                    <button type="button"
-                                            class="dropdown-item text-danger"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal"
-                                            onclick="setDeleteData(@item.Id, '@item.Name.Replace("'", "\\'")')">
-                                        🗑️ Delete
-                                    </button>
-                                </form>
+                                <button type="button"
+                                        class="dropdown-item text-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal"
+                                        onclick="setDeleteData(@item.Id, '@item.Name.Replace("'", "\\'")')">
+                                    🗑️ Delete
+                                </button>
                             </li>
                         </ul>
                     </div>
@@ -59,7 +59,7 @@
 
             <div class="modal-body">
                 Are you sure you want to delete
-                <strong id="categoryName"></strong>?
+                <strong id="categoryName" class="text-danger"></strong>?
             </div>
 
             <div class="modal-footer">
@@ -78,11 +78,7 @@
 
 <script>
     function setDeleteData(id, name) {
-        // Set delete URL
         document.getElementById("deleteForm").action = '/Category/Delete/' + id;
-
-        // Set category name in popup
         document.getElementById("categoryName").innerText = name;
     }
 </script>
-

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Inventory_Management_System.Models;
 using Inventory_Management_System.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace Inventory_Management_System.Controllers
 {
@@ -19,7 +20,7 @@ namespace Inventory_Management_System.Controllers
 
         public IActionResult Index()
         {
-            var products = _productService.GetAllProducts();
+            var products = _productService.GetAllProductsForView();
             return View(products);
         }
 
@@ -125,6 +126,16 @@ namespace Inventory_Management_System.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+        public IActionResult StockHistory(int productId)
+        {
+            var history = _context.stockHistories
+                .Include(x=>x.product)
+                .Where(x => x.ProductId == productId)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList();
+
+            return View(history);
         }
     }
 }

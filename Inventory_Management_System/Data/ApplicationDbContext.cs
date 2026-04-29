@@ -11,6 +11,7 @@ namespace Inventory_Management_System.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<StockHistory> stockHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,4 +1,5 @@
 ﻿using Inventory_Management_System.Data;
+using Inventory_Management_System.DTOs;
 using Inventory_Management_System.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +14,26 @@ namespace Inventory_Management_System.Services
             _context = context;
         }
 
-        public List<Product> GetAllProducts()
+
+
+        public List<ProductDTO> GetAllProducts()
         {
-            return _context.Products.Include(p => p.Category).ToList();
+            return _context.Products
+                .Select(p => new ProductDTO
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    CategoryName = p.Category.Name
+                })
+                .ToList();
+        }
+
+        public List<Product> GetAllProductsForView()
+        {
+            return _context.Products
+                .Include(p => p.Category)
+                .ToList();
         }
 
         public Product GetById(int id)
@@ -74,6 +92,66 @@ namespace Inventory_Management_System.Services
 
             _context.Products.Remove(product);
             _context.SaveChanges();
+        }
+
+        public Product GetProductById(int id)
+        {
+            return _context.Products.FirstOrDefault(p => p.Id == id);
+        }
+
+        public void IncreaseStock(int productId,int quantity)
+        {
+            var product=_context.Products.Find(productId);
+
+            if (product == null)
+                throw new Exception("Product not found");
+            
+            int oldQty = product.Quantity;
+            product.Quantity+= quantity;
+
+            var history = new StockHistory
+            {
+                ProductId = productId,
+                ChangeQuantity = quantity,
+                OldQuantity = oldQty,
+                NewQuantity = product.Quantity,
+                ActionType = "IN"
+            };
+            _context.stockHistories.Add(history);
+            _context.SaveChanges();
+        }
+        public void DecreaseStock(int productId, int quantity)
+        {
+            var product = _context.Products.Find(productId);
+
+            if (product == null)
+                throw new Exception("Product not found");
+
+            if (product.Quantity < quantity)
+                throw new Exception("Not enough stock");
+
+            int oldQty = product.Quantity;
+
+            product.Quantity -= quantity;
+
+            var history = new StockHistory
+            {
+                ProductId = productId,
+                ChangeQuantity = -quantity,
+                OldQuantity = oldQty,
+                NewQuantity = product.Quantity,
+                ActionType = "OUT"
+            };
+
+            _context.stockHistories.Add(history);
+            _context.SaveChanges();
+        }
+        public List<StockHistory> GetStockHistory(int productId)
+        {
+            return _context.stockHistories
+                .Where(x => x.ProductId == productId)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList();
         }
     }
 }

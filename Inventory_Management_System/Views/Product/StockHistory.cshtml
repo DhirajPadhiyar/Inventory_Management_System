@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Inventory_Management_System.Models.StockHistory>
+
+@{
+    ViewData["Title"] = "Stock History";
+}
+
+<h2 class="mb-3">Stock History</h2>
+
+<a asp-action="Index" class="btn btn-secondary mb-3">
+    Back to Products
+</a>
+
+<table class="table table-bordered table-hover table-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>Product Id</th>
+            <th>Change</th>
+            <th>Old Qty</th>
+            <th>New Qty</th>
+            <th>Type</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="6" class="text-center">
+                    No history found
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProductId</td>
+
+                    <td>
+                        @if (item.ChangeQuantity > 0)
+                        {
+                            <span class="text-success fw-bold">
+                                +@item.ChangeQuantity
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-danger fw-bold">
+                                @item.ChangeQuantity
+                            </span>
+                        }
+                    </td>
+
+                    <td>@item.OldQuantity</td>
+                    <td>@item.NewQuantity</td>
+
+                    <td>
+                        @if (item.ActionType == "IN")
+                        {
+                            <span class="badge bg-success">IN</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">OUT</span>
+                        }
+                    </td>
+
+                    <td>
+                        @item.CreatedAt.ToString("dd-MMM-yyyy hh:mm tt")
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
