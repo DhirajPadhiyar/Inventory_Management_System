@@ -1,13 +1,37 @@
 ﻿@model LoginViewModel
 
-<h2>Login</h2>
+<div class="auth-wrapper">
 
-<form asp-action="Login" method="post">
-    <input asp-for="Email" placeholder="Email" class="form-control mb-2" />
-    <input asp-for="Password" placeholder="Password" class="form-control mb-2" />
+    <div class="auth-card">
 
-    <button type="submit" class="btn btn-primary mt-2">Login</button>
-    <a asp-action="Register" class="btn btn-secondary mt-2">Register</a>
-</form>
-<br />
-<div asp-validation-summary="All"></div>
+        <h3 class="auth-title">Login</h3>
+
+        <form asp-action="Login" method="post">
+
+            <div class="mb-3">
+                <input asp-for="Email" class="form-control" placeholder="Email" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+
+            <div class="d-grid mb-2">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+
+            <div class="text-center">
+                <a asp-action="Register" class="text-decoration-none">
+                    Create account
+                </a>
+            </div>
+
+        </form>
+
+        <div asp-validation-summary="All" class="text-danger small text-center mt-2"></div>
+
+    </div>
+
+</div>

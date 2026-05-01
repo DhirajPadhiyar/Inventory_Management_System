@@ -1,16 +1,43 @@
 ﻿@model Inventory_Management_System.Models.Category
 
-<h2>Edit Category</h2>
+<div class="row justify-content-center">
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="Id" />
+    <div class="col-md-6">
 
-    <div class="form-group">
-        <label>Name</label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body">
+
+                <h5 class="fw-semibold mb-4">Edit Category</h5>
+
+                <form asp-action="Edit" method="post">
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <!-- Name -->
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Name</label>
+                        <input asp-for="Name" class="form-control" placeholder="Enter category name" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Index" class="btn btn-light border">Back</a>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
     </div>
 
-    <button type="submit" class="btn btn-primary mt-2">Update</button>
-    <a asp-action="Index" class="btn btn-secondary mt-2">Back</a>
-</form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

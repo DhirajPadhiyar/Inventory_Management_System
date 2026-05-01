@@ -4,89 +4,124 @@
     ViewData["Title"] = "Products";
 }
 
-<h2>Product List</h2>
-@*<p>User: @User.Identity.Name</p>
-<p>Is Admin: @User.IsInRole("Admin")</p> *@
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-semibold mb-0">Products</h4>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-controller="Product" asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus"></i> Add Product
+        </a>
+    }
+</div>
 
 @if (TempData["success"] != null)
 {
-    <div class="alert alert-success text-center">
+    <div class="alert alert-success text-center shadow-sm">
         @TempData["success"]
     </div>
 }
 
 @if (TempData["error"] != null)
 {
-    <div class="alert alert-danger text-center">
+    <div class="alert alert-danger text-center shadow-sm">
         @TempData["error"]
     </div>
 }
-@if (User.IsInRole("Admin"))
-{
-    <a asp-controller="Product" asp-action="Create" class="btn btn-success mb-3">
-        Add Product
-    </a>
-}
-<table class="table table-bordered table-hover table-sm">
-    <thead>
-        <tr>
-            <th style="text-align:center">Name</th>
-            <th style="text-align:center">Price</th>
-            <th style="text-align:center">Quantity</th>
-            <th style="text-align:center">Category</th>
-            <th style="width:80px; text-align:center;">Actions</th>
-        </tr>
-    </thead>
 
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td style="text-align:center">@item.Name</td>
-                <td style="text-align:center">@item.Price.ToString("0.00")</td>
-                <td style="text-align:center">@item.Quantity</td>
-                <td style="text-align:center">@item.Category?.Name</td>
+<div class="card shadow-sm border-0">
 
-                <td class="text-center">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
 
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="dropdown" title="Actions">
-                            <i class="bi bi-pencil"></i>
-                        </button>
+            <thead>
+                <tr class="custom-table-header text-uppercase small">
 
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <a class="dropdown-item"
-                                       asp-action="ProductHistory"
-                                       asp-route-productId="@item.Id">
-                                    📊 History
-                                </a>
-                            </li>
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <li>
-                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">
-                                        ✏️ Edit
-                                    </a>
-                                </li>
-                            
-                                <li>
-                                    <button type="button"
-                                            class="dropdown-item text-danger"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal"
-                                            onclick="setDeleteData(@item.Id, '@item.Name.Replace("'", "\\'")')">
-                                        🗑️ Delete
-                                    </button>
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                    <th class="fw-semibold ps-3">
+                        <i class="bi bi-box"></i> Name
+                    </th>
+
+                    <th class="text-center fw-semibold">
+                        <i class="bi bi-currency-rupee"></i> Price
+                    </th>
+
+                    <th class="text-center fw-semibold">
+                        <i class="bi bi-123"></i> Quantity
+                    </th>
+
+                    <th class="text-center fw-semibold">
+                        <i class="bi bi-tags"></i> Category
+                    </th>
+
+                    <th class="text-center fw-semibold" style="width:90px;">
+                        Action
+                    </th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="fw-medium">@item.Name</td>
+
+                        <td class="text-center">₹ @item.Price.ToString("0.00")</td>
+
+                        <td class="text-center">@item.Quantity</td>
+
+                        <td class="text-center">@item.Category?.Name</td>
+
+                        <td class="text-center">
+
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="dropdown">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+
+                                <ul class="dropdown-menu dropdown-menu-end">
+
+                                    <li>
+                                        <a class="dropdown-item"
+                                               asp-action="ProductHistory"
+                                               asp-route-productId="@item.Id">
+                                            <i class="bi bi-clock-history"></i> History
+                                        </a>
+                                    </li>
+
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li>
+                                            <a class="dropdown-item"
+                                                   asp-action="Edit"
+                                                   asp-route-id="@item.Id">
+                                                <i class="bi bi-pencil"></i> Edit
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <button type="button"
+                                                    class="dropdown-item text-danger"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteModal"
+                                                    onclick="setDeleteData(@item.Id, '@item.Name.Replace("'", "\\'")')">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </li>
+                                    }
+
+                                </ul>
+                            </div>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
 
 <!-- DELETE MODAL -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
@@ -105,7 +140,7 @@
 
             <div class="modal-footer">
                 <form id="deleteForm" method="post">
-                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
 
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

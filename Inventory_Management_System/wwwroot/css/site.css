@@ -29,10 +29,7 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
-.table thead {
-    background-color: #343a40;
-    color: white;
-}
+
 
     .table thead th {
         font-weight: 600;
@@ -52,4 +49,90 @@ body {
     .card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+/* ===== AUTH PAGES ===== */
+.auth-wrapper {
+    min-height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 28px;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+.auth-title {
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* inputs */
+.form-control {
+    height: 42px;
+    border-radius: 6px;
+}
+
+/* button */
+.btn-primary {
+    height: 42px;
+    border-radius: 6px;
+}
+.custom-table-header th {
+    background-color: #0d6efd !important;
+    color: white !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+/* DASHBOARD CARDS */
+.card-stat {
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+}
+
+/* subtle color accents */
+.card-blue {
+    background: #d6e4ff; /* richer light blue */
+}
+
+.card-green {
+    background: #d6f5e3;
+}
+
+.card-orange {
+    background: #ffe4c7;
+}
+
+/* icon styling */
+.card-icon {
+    font-size: 26px;
+}
+.card-stat:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+}
+
+.navbar-nav .nav-item {
+    margin-right: 18px;
+}
+
+.navbar-nav .nav-link {
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+    .navbar-nav .nav-link:hover {
+        background: rgba(255,255,255,0.15);
     }

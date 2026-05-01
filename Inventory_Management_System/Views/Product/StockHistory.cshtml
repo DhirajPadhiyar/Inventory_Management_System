@@ -4,67 +4,90 @@
     ViewData["Title"] = "Stock History";
 }
 
-<h2 class="mb-3">📊 Stock History</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-semibold mb-0">Stock History</h4>
 
-<a asp-action="Index" class="btn btn-secondary mb-3">
-    ⬅ Back
-</a>
+    <a asp-action="Index" class="btn btn-light border">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
+</div>
 
-<table class="table table-bordered table-hover table-sm">
-    <thead class="table-dark">
-        <tr>
-            <th>Product</th>
-            <th>Change</th>
-            <th>Old</th>
-            <th>New</th>
-            <th>Type</th>
-            <th>Date</th>
-        </tr>
-    </thead>
+<div class="card shadow-sm border-0">
 
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <!-- ✅ Product Name -->
-                <td>@item.Product?.Name</td>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
 
-                <!-- Change -->
-                <td>
-                    @if (item.ChangeQuantity > 0)
-                    {
-                        <span class="text-success fw-bold">
-                            +@item.ChangeQuantity
-                        </span>
-                    }
-                    else
-                    {
-                        <span class="text-danger fw-bold">
-                            @item.ChangeQuantity
-                        </span>
-                    }
-                </td>
+            <thead>
+                <tr class="custom-table-header text-uppercase small">
 
-                <td>@item.OldQuantity</td>
-                <td>@item.NewQuantity</td>
+                    <th class="ps-3">Product</th>
+                    <th class="text-center">Change</th>
+                    <th class="text-center">Old</th>
+                    <th class="text-center">New</th>
+                    <th class="text-center">Type</th>
+                    <th class="text-center">Date</th>
 
-                <!-- Type -->
-                <td>
-                    @if (item.ActionType == "IN")
-                    {
-                        <span class="badge bg-success">IN</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-danger">OUT</span>
-                    }
-                </td>
+                </tr>
+            </thead>
 
-                <!-- Date -->
-                <td>
-                    @item.CreatedAt.ToString("dd-MMM-yyyy hh:mm tt")
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <!-- Product -->
+                        <td class="fw-medium ps-3">
+                            @item.Product?.Name
+                        </td>
+
+                        <!-- Change -->
+                        <td class="text-center">
+                            @if (item.ChangeQuantity > 0)
+                            {
+                                <span class="text-success fw-bold">
+                                    +@item.ChangeQuantity
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-danger fw-bold">
+                                    @item.ChangeQuantity
+                                </span>
+                            }
+                        </td>
+
+                        <!-- Old -->
+                        <td class="text-center fw-semibold">
+                            @item.OldQuantity
+                        </td>
+
+                        <!-- New -->
+                        <td class="text-center fw-semibold">
+                            @item.NewQuantity
+                        </td>
+
+                        <!-- Type -->
+                        <td class="text-center">
+                            @if (item.ActionType == "IN")
+                            {
+                                <span class="badge bg-success">IN</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">OUT</span>
+                            }
+                        </td>
+
+                        <!-- Date -->
+                        <td class="text-center small text-muted">
+                            @item.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
