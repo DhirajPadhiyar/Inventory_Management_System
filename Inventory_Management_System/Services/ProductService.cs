@@ -75,6 +75,27 @@ namespace Inventory_Management_System.Services
             if (product == null)
                 throw new Exception("Product not found.");
 
+            int oldQty = product.Quantity;
+            int newQty = model.Quantity;
+
+            // ✅ STOCK HISTORY LOGIC
+            if (oldQty != newQty)
+            {
+                int diff = newQty - oldQty;
+
+                var history = new StockHistory
+                {
+                    ProductId = product.Id,
+                    ChangeQuantity = diff,
+                    OldQuantity = oldQty,
+                    NewQuantity = newQty,
+                    ActionType = diff > 0 ? "IN" : "OUT"
+                };
+
+                _context.stockHistories.Add(history);
+            }
+
+            // Update fields
             product.Name = model.Name;
             product.Price = model.Price;
             product.Quantity = model.Quantity;
@@ -150,6 +171,13 @@ namespace Inventory_Management_System.Services
         {
             return _context.stockHistories
                 .Where(x => x.ProductId == productId)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList();
+        }
+        public List<StockHistory> GetAllStockHistory()
+        {
+            return _context.stockHistories
+                .Include(x => x.Product)
                 .OrderByDescending(x => x.CreatedAt)
                 .ToList();
         }

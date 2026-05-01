@@ -1,14 +1,18 @@
 ﻿@model IEnumerable<Inventory_Management_System.Models.Category>
 
 <h2>Categories</h2>
-
-<a asp-action="Create" class="btn btn-success mb-3">Add Category</a>
-
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Create" class="btn btn-success mb-3">Add Category</a>
+}
 <table class="table table-bordered table-hover table-sm">
     <thead>
         <tr>
             <th>Name</th>
-            <th style="width:80px; text-align:center;">Actions</th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th style="width:80px; text-align:center;">Actions</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -17,31 +21,34 @@
             <tr>
                 <td>@item.Name</td>
 
-                <td class="text-center">
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="dropdown" title="Actions">
-                            <i class="bi bi-pencil"></i>
-                        </button>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td class="text-center">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="dropdown" title="Actions">
+                                <i class="bi bi-pencil"></i>
+                            </button>
 
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">
-                                    ✏️ Edit
-                                </a>
-                            </li>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">
+                                        ✏️ Edit
+                                    </a>
+                                </li>
 
-                            <li>
-                                <button type="button"
-                                        class="dropdown-item text-danger"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal"
-                                        onclick="setDeleteData(@item.Id, '@item.Name.Replace("'", "\\'")')">
-                                    🗑️ Delete
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </td>
+                                <li>
+                                    <button type="button"
+                                            class="dropdown-item text-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal"
+                                            onclick="setDeleteData(@item.Id, '@item.Name.Replace("'", "\\'")')">
+                                        🗑️ Delete
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                }
             </tr>
         }
     </tbody>

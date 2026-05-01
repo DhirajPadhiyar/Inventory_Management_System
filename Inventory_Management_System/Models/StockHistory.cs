@@ -4,7 +4,7 @@
     {
         public int id { get; set; }
         public int ProductId { get; set; } 
-        public Product product { get; set; }
+        public Product Product { get; set; }
         public int ChangeQuantity { get; set; }
         public int OldQuantity { get; set; }
         public int NewQuantity { get; set; }

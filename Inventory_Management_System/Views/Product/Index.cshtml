@@ -5,6 +5,8 @@
 }
 
 <h2>Product List</h2>
+@*<p>User: @User.Identity.Name</p>
+<p>Is Admin: @User.IsInRole("Admin")</p> *@
 
 @if (TempData["success"] != null)
 {
@@ -19,11 +21,12 @@
         @TempData["error"]
     </div>
 }
-
-<a asp-controller="Product" asp-action="Create" class="btn btn-success mb-3">
-    Add Product
-</a>
-
+@if (User.IsInRole("Admin"))
+{
+    <a asp-controller="Product" asp-action="Create" class="btn btn-success mb-3">
+        Add Product
+    </a>
+}
 <table class="table table-bordered table-hover table-sm">
     <thead>
         <tr>
@@ -54,26 +57,29 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
                                 <a class="dropdown-item"
-                                       asp-action="StockHistory"
+                                       asp-action="ProductHistory"
                                        asp-route-productId="@item.Id">
                                     📊 History
                                 </a>
                             </li>
-                            <li>
-                                <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">
-                                    ✏️ Edit
-                                </a>
-                            </li>
-
-                            <li>
-                                <button type="button"
-                                        class="dropdown-item text-danger"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal"
-                                        onclick="setDeleteData(@item.Id, '@item.Name.Replace("'", "\\'")')">
-                                    🗑️ Delete
-                                </button>
-                            </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li>
+                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">
+                                        ✏️ Edit
+                                    </a>
+                                </li>
+                            
+                                <li>
+                                    <button type="button"
+                                            class="dropdown-item text-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal"
+                                            onclick="setDeleteData(@item.Id, '@item.Name.Replace("'", "\\'")')">
+                                        🗑️ Delete
+                                    </button>
+                                </li>
+                            }
                         </ul>
                     </div>
                 </td>

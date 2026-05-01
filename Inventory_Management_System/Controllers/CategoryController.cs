@@ -1,9 +1,11 @@
 ﻿using Inventory_Management_System.Models;
 using Inventory_Management_System.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inventory_Management_System.Controllers
 {
+    [Authorize]
     public class CategoryController : Controller
     {
         private readonly CategoryService _categoryService;
@@ -21,6 +23,7 @@ namespace Inventory_Management_System.Controllers
         }
 
         // GET: Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -28,6 +31,7 @@ namespace Inventory_Management_System.Controllers
 
         // POST: Create
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(Category category)
         {
             if (ModelState.IsValid)
@@ -40,6 +44,7 @@ namespace Inventory_Management_System.Controllers
         }
 
         // GET: Edit
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id)
         {
             var category = _categoryService.GetById(id);
@@ -52,6 +57,7 @@ namespace Inventory_Management_System.Controllers
 
         // POST: Edit
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(Category category)
         {
             if (ModelState.IsValid)
@@ -64,6 +70,7 @@ namespace Inventory_Management_System.Controllers
         }
 
         // GET: Delete
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             var category = _categoryService.GetById(id);
@@ -76,6 +83,7 @@ namespace Inventory_Management_System.Controllers
 
         // POST: Delete
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteConfirmed(int id)
         {
             var category = _categoryService.GetById(id);

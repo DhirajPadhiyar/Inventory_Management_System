@@ -1,0 +1,13 @@
+﻿@model LoginViewModel
+
+<h2>Login</h2>
+
+<form asp-action="Login" method="post">
+    <input asp-for="Email" placeholder="Email" class="form-control mb-2" />
+    <input asp-for="Password" placeholder="Password" class="form-control mb-2" />
+
+    <button type="submit" class="btn btn-primary mt-2">Login</button>
+    <a asp-action="Register" class="btn btn-secondary mt-2">Register</a>
+</form>
+<br />
+<div asp-validation-summary="All"></div>

@@ -1,16 +1,17 @@
 ﻿using Inventory_Management_System.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Inventory_Management_System.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<User> Users { get; set; }
+      
         public DbSet<StockHistory> stockHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

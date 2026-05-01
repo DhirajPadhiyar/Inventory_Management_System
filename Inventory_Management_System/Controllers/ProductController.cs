@@ -1,12 +1,14 @@
-﻿using Inventory_Management_System.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Inventory_Management_System.Data;
 using Inventory_Management_System.Models;
-using Inventory_Management_System.Data;
+using Inventory_Management_System.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inventory_Management_System.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly ProductService _productService;
@@ -23,7 +25,7 @@ namespace Inventory_Management_System.Controllers
             var products = _productService.GetAllProductsForView();
             return View(products);
         }
-
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             var categories = _context.Categories.ToList();
@@ -32,6 +34,7 @@ namespace Inventory_Management_System.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(Product product)
         {
             if (!ModelState.IsValid)
@@ -59,6 +62,7 @@ namespace Inventory_Management_System.Controllers
         }
 
         // GET Edit
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id)
         {
             var product = _productService.GetById(id);
@@ -74,6 +78,7 @@ namespace Inventory_Management_System.Controllers
 
         // POST Edit
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(Product model)
         {
             if (!ModelState.IsValid)
@@ -101,6 +106,7 @@ namespace Inventory_Management_System.Controllers
         }
 
         // GET Delete
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             var product = _productService.GetById(id);
@@ -113,6 +119,7 @@ namespace Inventory_Management_System.Controllers
 
         // POST Delete
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteConfirmed(int id)
         {
             try
@@ -127,15 +134,21 @@ namespace Inventory_Management_System.Controllers
 
             return RedirectToAction("Index");
         }
-        public IActionResult StockHistory(int productId)
+        public IActionResult ProductHistory(int productId)
         {
             var history = _context.stockHistories
-                .Include(x=>x.product)
+                .Include(x => x.Product)
                 .Where(x => x.ProductId == productId)
                 .OrderByDescending(x => x.CreatedAt)
                 .ToList();
 
-            return View(history);
+            return View("StockHistory", history);
+        }
+        [Authorize]
+        public IActionResult StockHistory()
+        {
+            var data = _productService.GetAllStockHistory();
+            return View(data);
         }
     }
 }
