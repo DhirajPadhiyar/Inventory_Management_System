@@ -7,13 +7,13 @@ It helps manage products, categories, and users efficiently.
 
 ---
 
-## 🚀 Features
-
-* Add, Edit, Delete Products
-* Category Management
-* User Management
-* Database integration using Entity Framework Core
-* Clean MVC Architecture
+## Features:
+- Authentication (Login/Register)
+- Role-based system (Admin & User)
+- Admin: Add/Edit/Delete products
+- User: View + update stock
+- Stock history tracking
+- Secure using ASP.NET Identity
 
 ---
 
