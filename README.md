@@ -77,6 +77,11 @@ Admin:
 
 ---
 
+## Project Status 
+✅ Completed
+
+---
+
 ## 👨‍💻 Author
 
 Dhiraj Padhiyar
